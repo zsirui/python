@@ -1,25 +1,26 @@
 #!/usr/bin/python
 #-*- coding:utf-8 -*-
 
-import hashlib, sys
+import hashlib
 from os.path import isfile
 from zlib import crc32
 
 class HASH():
 	"""docstring for hash"""
-	def __init__(self, src):
+	def __init__(self, src = '', salt = ''):
 		self.src = src
+		self.salt = salt
 
 	def Compare(self, src, target):
-		if src == target:
+		if src.upper() == target.upper():
 			return True
 		else:
 			return False
 		
 
 class MD5(HASH):
-	def __init__(self, src):
-		HASH.__init__(self, src)
+	def __init__(self, src, salt = ''):
+		HASH.__init__(self, src, salt)
 		self.value = self.md5Value(self.src)
 
 	def md5Value(self, src):
@@ -32,13 +33,13 @@ class MD5(HASH):
 						break
 					m.update(data)
 		else:
-			m.update(src)
+			m.update(src + self.salt)
 		return m.hexdigest()
 		
 class CRC32(HASH):
 	"""docstring for CRC32"""
-	def __init__(self, src):
-		HASH.__init__(self, src)
+	def __init__(self, src, salt = ''):
+		HASH.__init__(self, src, salt)
 		self.value = self.crcValue(self.src)
 		
 	def crcValue(self, src):
@@ -51,13 +52,13 @@ class CRC32(HASH):
 						break
 					crc = crc32(data, crc)
 		else:
-			crc = crc32(src, crc)
+			crc = crc32(src + self.data, crc)
 		return str(hex(crc & 0xffffffff))[2:]
 
 class SHA(HASH):
 	"""docstring for SHA"""
-	def __init__(self, src, Type):
-		HASH.__init__(self, src)
+	def __init__(self, src, Type, salt = ''):
+		HASH.__init__(self, src, salt)
 		self.type = self.setType(Type)
 		self.value = self.shaValue(src, self.type)
 
@@ -78,5 +79,5 @@ class SHA(HASH):
 						break
 					s.update(data)
 		else:
-			s.update(src)
+			s.update(src + self.data)
 		return s.hexdigest()
