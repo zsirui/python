@@ -52,7 +52,7 @@ class CRC32(HASH):
 						break
 					crc = crc32(data, crc)
 		else:
-			crc = crc32(src + self.data, crc)
+			crc = crc32(src + self.salt, crc)
 		return str(hex(crc & 0xffffffff))[2:]
 
 class SHA(HASH):
@@ -79,5 +79,5 @@ class SHA(HASH):
 						break
 					s.update(data)
 		else:
-			s.update(src + self.data)
+			s.update(src + self.salt)
 		return s.hexdigest()
