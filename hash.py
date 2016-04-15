@@ -16,7 +16,6 @@ class HASH():
 			return True
 		else:
 			return False
-		
 
 class MD5(HASH):
 	def __init__(self, src, salt = ''):
